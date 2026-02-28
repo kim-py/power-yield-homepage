@@ -1,0 +1,131 @@
+---
+interface Props {
+  project?: any;
+  action: string;
+  patchMethod?: boolean;
+}
+const { project: p, action, patchMethod = false } = Astro.props;
+
+const input = (style = '') =>
+  `width:100%;padding:10px 14px;border:1px solid var(--light-grey);border-radius:4px;font-size:14px;box-sizing:border-box;background:white;${style}`;
+const label = 'display:block;font-size:12px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--mid-grey);margin-bottom:6px;';
+---
+
+<form method="POST" action={action}>
+  {patchMethod && <input type="hidden" name="_method" value="PATCH" />}
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+
+    <!-- Name -->
+    <div style="grid-column:1/-1;">
+      <label style={label}>Project Name *</label>
+      <input type="text" name="name" value={p?.name ?? ''} required style={input()} />
+    </div>
+
+    <!-- Location + Region Code -->
+    <div>
+      <label style={label}>Location *</label>
+      <input type="text" name="location" value={p?.location ?? ''} placeholder="Algarve, PT" required style={input()} />
+    </div>
+    <div>
+      <label style={label}>Region Code (ISO 2) *</label>
+      <input type="text" name="region_code" value={p?.region_code ?? ''} placeholder="PT" required maxlength="2" style={input()} />
+    </div>
+
+    <!-- Developer -->
+    <div style="grid-column:1/-1;">
+      <label style={label}>Developer Name *</label>
+      <input type="text" name="developer_name" value={p?.developer_name ?? ''} required style={input()} />
+    </div>
+
+    <!-- Technology + Label -->
+    <div>
+      <label style={label}>Technology *</label>
+      <select name="technology" required style={input()}>
+        <option value="solar"  selected={p?.technology === 'solar'}>Solar</option>
+        <option value="wind"   selected={p?.technology === 'wind'}>Wind</option>
+        <option value="hybrid" selected={p?.technology === 'hybrid'}>Hybrid</option>
+      </select>
+    </div>
+    <div>
+      <label style={label}>Technology Label (display) *</label>
+      <input type="text" name="technology_label" value={p?.technology_label ?? ''}
+        placeholder="Solar PV / Wind — Offshore / Agrivoltaic" required style={input()} />
+    </div>
+
+    <!-- Status + Revenue Type -->
+    <div>
+      <label style={label}>Status *</label>
+      <select name="status" required style={input()}>
+        <option value="open"    selected={p?.status === 'open'}>Open</option>
+        <option value="closing" selected={p?.status === 'closing'}>Closing Soon</option>
+        <option value="coming"  selected={p?.status === 'coming'}>Coming Soon</option>
+      </select>
+    </div>
+    <div>
+      <label style={label}>Revenue Type *</label>
+      <input type="text" name="revenue_type" value={p?.revenue_type ?? ''}
+        placeholder="PPA / FiT / CfD / PPA + FiT" required style={input()} />
+    </div>
+
+    <!-- Volume + IRR -->
+    <div>
+      <label style={label}>Volume (€) *</label>
+      <input type="number" name="volume_eur" value={p?.volume_eur ?? ''} placeholder="48500000"
+        required min="0" style={input()} />
+    </div>
+    <div>
+      <label style={label}>Target IRR (%) *</label>
+      <input type="number" name="target_irr" value={p?.target_irr ?? ''} placeholder="8.4"
+        required min="0" step="0.1" style={input()} />
+    </div>
+
+    <!-- Capacity + Duration -->
+    <div>
+      <label style={label}>Capacity (MW) *</label>
+      <input type="number" name="capacity_mw" value={p?.capacity_mw ?? ''} placeholder="42"
+        required min="0" step="0.1" style={input()} />
+    </div>
+    <div>
+      <label style={label}>Duration (Years) *</label>
+      <input type="number" name="duration_years" value={p?.duration_years ?? ''} placeholder="12"
+        required min="1" style={input()} />
+    </div>
+
+    <!-- Funding Progress + Opens Label -->
+    <div>
+      <label style={label}>Funding Progress (%)</label>
+      <input type="number" name="funding_progress_pct" value={p?.funding_progress_pct ?? 0}
+        min="0" max="100" style={input()} />
+    </div>
+    <div>
+      <label style={label}>Opens Label (Coming Soon only)</label>
+      <input type="text" name="opens_label" value={p?.opens_label ?? ''}
+        placeholder="Q3 2026" style={input()} />
+    </div>
+
+    <!-- Display Order -->
+    <div>
+      <label style={label}>Display Order</label>
+      <input type="number" name="display_order" value={p?.display_order ?? 0} min="0" style={input()} />
+    </div>
+
+    <!-- Checkboxes -->
+    <div style="display:flex;gap:32px;align-items:center;padding-top:24px;">
+      <label style="display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;font-weight:500;">
+        <input type="checkbox" name="is_featured" value="1" checked={!!p?.is_featured} style="width:16px;height:16px;" />
+        Featured on Homepage
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;font-weight:500;">
+        <input type="checkbox" name="is_visible" value="1" checked={p ? !!p.is_visible : true} style="width:16px;height:16px;" />
+        Visible
+      </label>
+    </div>
+
+  </div>
+
+  <div style="margin-top:32px;padding-top:24px;border-top:1px solid var(--light-grey);display:flex;gap:12px;">
+    <button type="submit" class="btn-green">{p ? 'Save Changes' : 'Create Project'} &rarr;</button>
+    <a href="/admin/projects" class="btn-outline">Cancel</a>
+  </div>
+</form>

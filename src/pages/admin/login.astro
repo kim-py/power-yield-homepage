@@ -1,0 +1,41 @@
+---
+export const prerender = false;
+const error = Astro.url.searchParams.get('error');
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login — Power Yield</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body style="background:var(--charcoal);min-height:100vh;display:flex;align-items:center;justify-content:center;margin:0;">
+  <div style="background:var(--cream);padding:48px;border-radius:8px;width:100%;max-width:380px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+    <p style="font-size:12px;font-weight:600;letter-spacing:0.1em;color:var(--green);text-transform:uppercase;margin-bottom:12px;">Power Yield</p>
+    <h1 style="font-size:24px;margin-bottom:6px;">Admin Login</h1>
+    <p style="color:var(--mid-grey);margin-bottom:32px;font-size:14px;">Enter your admin password to continue.</p>
+
+    {error && (
+      <p style="color:#c0392b;margin-bottom:20px;font-size:14px;padding:10px 14px;background:rgba(192,57,43,0.08);border-radius:4px;">
+        Incorrect password — try again.
+      </p>
+    )}
+
+    <form method="POST" action="/api/admin/auth">
+      <label style="display:block;font-size:12px;font-weight:600;color:var(--mid-grey);margin-bottom:6px;letter-spacing:0.05em;text-transform:uppercase;">Password</label>
+      <input
+        type="password"
+        name="password"
+        placeholder="••••••••"
+        required
+        autofocus
+        style="width:100%;padding:12px 14px;border:1px solid var(--light-grey);border-radius:4px;font-size:15px;margin-bottom:20px;box-sizing:border-box;background:white;"
+      />
+      <button type="submit" class="btn-green" style="width:100%;justify-content:center;text-align:center;">
+        Sign In &rarr;
+      </button>
+    </form>
+  </div>
+</body>
+</html>
