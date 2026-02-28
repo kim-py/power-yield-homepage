@@ -1,0 +1,133 @@
+---
+interface Props {
+  id: number;
+  name: string;
+  location: string;
+  developer_name: string;
+  technology: 'solar' | 'wind' | 'hybrid';
+  technology_label: string;
+  status: 'open' | 'closing' | 'coming';
+  volume_eur: number;
+  target_irr: number;
+  capacity_mw: number;
+  duration_years: number;
+  region_code: string;
+  revenue_type: string;
+  funding_progress_pct: number;
+  opens_label: string | null;
+}
+
+const {
+  name,
+  location,
+  developer_name,
+  technology,
+  technology_label,
+  status,
+  volume_eur,
+  target_irr,
+  capacity_mw,
+  duration_years,
+  revenue_type,
+  funding_progress_pct,
+  opens_label,
+  region_code,
+} = Astro.props;
+
+// Country name from region code
+const countryNames: Record<string, string> = {
+  PT: 'Portugal', DE: 'Germany', ES: 'Spain', FR: 'France',
+  IT: 'Italy', DK: 'Denmark', GB: 'United Kingdom', NL: 'Netherlands',
+  NO: 'Norway', SE: 'Sweden', FI: 'Finland', PL: 'Poland', AT: 'Austria',
+};
+const countryName = countryNames[region_code] ?? region_code;
+
+// Format volume: 48500000 → "€ 48.5M"
+const volumeFormatted = `€ ${(volume_eur / 1_000_000).toLocaleString('en', { maximumFractionDigits: 1 })}M`;
+
+// Technology tag
+const techTagClass = technology === 'wind' ? 'tag tag--charcoal' : 'tag tag--green-pale';
+const techTagStyle = technology === 'wind'
+  ? (status === 'closing'
+    ? 'background:rgba(181,151,90,0.12);color:var(--gold);border:none'
+    : 'background:rgba(61,122,90,0.08);color:var(--green)')
+  : undefined;
+
+// Status tag
+const statusTagClass = status === 'closing' ? 'tag tag--gold' : status === 'coming' ? 'tag tag--grey' : 'tag tag--green-pale';
+const statusTagStyle = status === 'open' ? 'background:transparent;border:1px solid var(--green);color:var(--green)' : undefined;
+const statusLabel = status === 'open' ? 'Open' : status === 'closing' ? 'Closing Soon' : 'Coming Soon';
+
+// CTA
+const ctaHref = status === 'coming' ? '/#waitlist-cta' : '/investors#investors-waitlist';
+const ctaText = status === 'coming' ? 'Join Waitlist for Early Access →' : 'Request Full Documentation →';
+const ctaStyle = status === 'coming' ? 'color:var(--mid-grey)' : status === 'closing' ? 'color:var(--gold)' : undefined;
+
+// Progress bar
+const progressFillClass = status === 'closing' ? 'progress-bar__fill progress-bar__fill--gold' : 'progress-bar__fill';
+const progressFillStyle = status === 'coming' ? `width:0;background:var(--light-grey)` : 'width:0';
+---
+
+<article class="project-card" data-tech={technology} data-status={status}>
+  <div class="project-card__header">
+    <span class={techTagClass} style={techTagStyle}>{technology_label}</span>
+    <span class={statusTagClass} style={statusTagStyle}>{statusLabel}</span>
+  </div>
+  <div class="project-card__body">
+    <div>
+      <h2 class="project-card__title">{name}<br>· {countryName}</h2>
+      <p class="project-card__developer">{developer_name}</p>
+    </div>
+    <div class="project-card__stats">
+      <div>
+        <p class="project-card__stat-key">Project Volume</p>
+        <p class="project-card__stat-val">{volumeFormatted}</p>
+      </div>
+      <div>
+        <p class="project-card__stat-key">Target IRR</p>
+        <p class="project-card__stat-val project-card__stat-val--green">{target_irr}% p.a.</p>
+      </div>
+      <div>
+        <p class="project-card__stat-key">Capacity</p>
+        <p class="project-card__stat-val">{capacity_mw} MW</p>
+      </div>
+      <div>
+        <p class="project-card__stat-key">Duration</p>
+        <p class="project-card__stat-val">{duration_years} Years</p>
+      </div>
+      <div>
+        <p class="project-card__stat-key">Location</p>
+        <p class="project-card__stat-val">{location}</p>
+      </div>
+      <div>
+        <p class="project-card__stat-key">Revenue Type</p>
+        <p class="project-card__stat-val">{revenue_type}</p>
+      </div>
+    </div>
+    <div class="project-card__progress">
+      {status === 'coming' ? (
+        <div class="project-card__progress-label">
+          <span>Opens for investment</span>
+          <span style="color:var(--mid-grey)">{opens_label}</span>
+        </div>
+      ) : (
+        <div class="project-card__progress-label">
+          <span>Funding Progress</span>
+          <span>{funding_progress_pct}%</span>
+        </div>
+      )}
+      <div class="progress-bar">
+        <div
+          class={progressFillClass}
+          data-pct={status === 'coming' ? 0 : funding_progress_pct}
+          style={progressFillStyle}
+        ></div>
+      </div>
+    </div>
+  </div>
+  <div class="project-card__footer">
+    <a href={ctaHref} class="project-card__cta" style={ctaStyle}>
+      {ctaText}
+    </a>
+  </div>
+</article>
