@@ -23,6 +23,7 @@ const path = Astro.url.pathname;
       <nav style="display:flex;gap:4px;align-items:center;">
         <a href="/admin" style={`padding:6px 12px;border-radius:4px;font-size:13px;text-decoration:none;${path === '/admin' ? 'color:var(--cream);background:rgba(255,255,255,0.08)' : 'color:var(--mid-grey)'}`}>Dashboard</a>
         <a href="/admin/projects" style={`padding:6px 12px;border-radius:4px;font-size:13px;text-decoration:none;${path.startsWith('/admin/projects') ? 'color:var(--cream);background:rgba(255,255,255,0.08)' : 'color:var(--mid-grey)'}`}>Projects</a>
+        <a href="/admin/waitlist" style={`padding:6px 12px;border-radius:4px;font-size:13px;text-decoration:none;${path === '/admin/waitlist' ? 'color:var(--cream);background:rgba(255,255,255,0.08)' : 'color:var(--mid-grey)'}`}>Waitlist</a>
         <a href="/admin/submissions" style={`padding:6px 12px;border-radius:4px;font-size:13px;text-decoration:none;${path === '/admin/submissions' ? 'color:var(--cream);background:rgba(255,255,255,0.08)' : 'color:var(--mid-grey)'}`}>Submissions</a>
         <a href="/api/admin/logout" style="padding:6px 12px;border-radius:4px;font-size:13px;text-decoration:none;color:var(--mid-grey);margin-left:8px;border:1px solid rgba(255,255,255,0.1);">Logout</a>
       </nav>
