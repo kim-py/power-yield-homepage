@@ -12,7 +12,7 @@ database_id = "d4e82b72-ecbc-4d51-ac8c-ed6833e85116"
 # Then replace the id below with the output
 [[kv_namespaces]]
 binding = "RATE_LIMIT"
-id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"
+id = "250a0aa2cb184948bf1cb7ca3313fdce"
 
 # Phase 3: Cloudflare Email Workers
 # Requires Email Routing to be enabled for your domain in the Cloudflare dashboard.
