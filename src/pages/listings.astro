@@ -1,0 +1,457 @@
+---
+import Layout from '../layouts/Layout.astro';
+export const prerender = true;
+---
+<Layout
+  title="Open Projects — Power Yield"
+  description="Browse Power Yield's curated pipeline of wind and solar infrastructure projects. Institutional-grade opportunities, open to private investors."
+>
+
+  <!-- ═══════════════════════════════════════════════════════
+       HERO
+  ════════════════════════════════════════════════════════════ -->
+  <section class="hero hero--short">
+    <div class="hero__pattern" aria-hidden="true">
+      <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="gridlisting" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
+            <path d="M 80 0 L 0 0 0 80" fill="none" stroke="#1E1E1C" stroke-width="0.8"/>
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#gridlisting)"/>
+      </svg>
+    </div>
+    <div class="container">
+      <div class="hero__inner">
+        <p class="hero__eyebrow">Current Pipeline</p>
+        <h1>Open &amp; Upcoming<br><em>Projects</em></h1>
+        <p class="hero__sub">
+          Browse our curated pipeline of wind and solar infrastructure projects.
+          All listings are subject to due diligence and threshold-based funding —
+          full documentation is available to registered investors.
+        </p>
+
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px">
+          <a href="/investors" class="btn-outline">How Investing Works</a>
+          <a href="/#waitlist-hero" class="btn-green">Join Waitlist for Access &rarr;</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════
+       FILTER + LISTINGS GRID
+  ════════════════════════════════════════════════════════════ -->
+  <section class="section section--off-white">
+    <div class="container">
+
+      <!-- Filter bar -->
+      <div class="filter-bar" role="group" aria-label="Filter projects">
+        <div class="filter-group">
+          <span class="filter-label">Technology</span>
+          <button class="filter-btn active" data-filter-type="tech" data-filter-value="all">All</button>
+          <button class="filter-btn" data-filter-type="tech" data-filter-value="solar">Solar</button>
+          <button class="filter-btn" data-filter-type="tech" data-filter-value="wind">Wind</button>
+          <button class="filter-btn" data-filter-type="tech" data-filter-value="hybrid">Hybrid</button>
+        </div>
+        <div class="filter-group">
+          <span class="filter-label">Status</span>
+          <button class="filter-btn active" data-filter-type="status" data-filter-value="all">All</button>
+          <button class="filter-btn" data-filter-type="status" data-filter-value="open">Open</button>
+          <button class="filter-btn" data-filter-type="status" data-filter-value="closing">Closing Soon</button>
+          <button class="filter-btn" data-filter-type="status" data-filter-value="coming">Coming Soon</button>
+        </div>
+      </div>
+
+      <!-- Results count -->
+      <p class="results-count" aria-live="polite">
+        <strong id="results-count">6</strong> projects
+      </p>
+
+      <!-- Project cards grid -->
+      <div class="project-listings-grid" id="project-listings">
+
+        <!-- ─── Card 1: Algarve Solar I ──────────────────── -->
+        <article class="project-card" data-tech="solar" data-status="open">
+          <div class="project-card__header">
+            <span class="tag tag--green-pale">Solar PV</span>
+            <span class="tag tag--green-pale" style="background:transparent;border:1px solid var(--green);color:var(--green)">Open</span>
+          </div>
+          <div class="project-card__body">
+            <div>
+              <h2 class="project-card__title">Algarve Solar I<br>· Portugal</h2>
+              <p class="project-card__developer">Iberian Renewable Fund</p>
+            </div>
+            <div class="project-card__stats">
+              <div>
+                <p class="project-card__stat-key">Project Volume</p>
+                <p class="project-card__stat-val">€ 48.5M</p>
+              </div>
+              <div>
+                <p class="project-card__stat-key">Target IRR</p>
+                <p class="project-card__stat-val project-card__stat-val--green">8.4% p.a.</p>
+              </div>
+              <div>
+                <p class="project-card__stat-key">Capacity</p>
+                <p class="project-card__stat-val">42 MW</p>
+              </div>
+              <div>
+                <p class="project-card__stat-key">Duration</p>
+                <p class="project-card__stat-val">12 Years</p>
+              </div>
+              <div>
+                <p class="project-card__stat-key">Location</p>
+                <p class="project-card__stat-val">Algarve, PT</p>
+              </div>
+              <div>
+                <p class="project-card__stat-key">Revenue Type</p>
+                <p class="project-card__stat-val">PPA + FiT</p>
+              </div>
+            </div>
+            <div class="project-card__progress">
+              <div class="project-card__progress-label">
+                <span>Funding Progress</span>
+                <span>78%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-bar__fill" data-pct="78" style="width:0"></div>
+              </div>
+            </div>
+          </div>
+          <div class="project-card__footer">
+            <a href="/investors#investors-waitlist" class="project-card__cta">
+              Request Full Documentation &rarr;
+            </a>
+          </div>
+        </article>
+
+        <!-- ─── Card 2: North Sea Offshore II ────────────── -->
+        <article class="project-card" data-tech="wind" data-status="closing">
+          <div class="project-card__header">
+            <span class="tag tag--charcoal" style="background:rgba(181,151,90,0.12);color:var(--gold);border:none">Wind — Offshore</span>
+            <span class="tag tag--gold">Closing Soon</span>
+          </div>
+          <div class="project-card__body">
+            <div>
+              <h2 class="project-card__title">North Sea Offshore II<br>· Germany</h2>
+              <p class="project-card__developer">Northern Yield Fund</p>
+            </div>
+            <div class="project-card__stats">
+              <div>
+                <p class="project-card__stat-key">Project Volume</p>
+                <p class="project-card__stat-val">€ 124M</p>
+              </div>
+              <div>
+                <p class="project-card__stat-key">Target IRR</p>
+                <p class="project-card__stat-val project-card__stat-val--green">9.1% p.a.</p>
+              </div>
+              <div>
+                <p class="project-card__stat-key">Capacity</p>
+                <p class="project-card__stat-val">120 MW</p>
+              </div>
+              <div>
+                <p class="project-card__stat-key">Duration</p>
+                <p class="project-card__stat-val">15 Years</p>
+              </div>
+              <div>
+                <p class="project-card__stat-key">Location</p>
+                <p class="project-card__stat-val">North Sea, DE</p>
+              </div>
+              <div>
+                <p class="project-card__stat-key">Revenue Type</p>
+                <p class="project-card__stat-val">CfD</p>
+              </div>
+            </div>
+            <div class="project-card__progress">
+              <div class="project-card__progress-label">
+                <span>Funding Progress</span>
+                <span>94%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-bar__fill progress-bar__fill--gold" data-pct="94" style="width:0"></div>
+              </div>
+            </div>
+          </div>
+          <div class="project-card__footer">
+            <a href="/investors#investors-waitlist" class="project-card__cta" style="color:var(--gold)">
+              Request Full Documentation &rarr;
+            </a>
+          </div>
+        </article>
+
+        <!-- ─── Card 3: Andalusia Wind Farm ──────────────── -->
+        <article class="project-card" data-tech="wind" data-status="open">
+          <div class="project-card__header">
+            <span class="tag tag--green-pale" style="background:rgba(61,122,90,0.08);color:var(--green)">Wind — Onshore</span>
+            <span class="tag tag--green-pale" style="background:transparent;border:1px solid var(--green);color:var(--green)">Open</span>
+          </div>
+          <div class="project-card__body">
+            <div>
+              <h2 class="project-card__title">Andalusia Wind Farm<br>· Spain</h2>
+              <p class="project-card__developer">Iberian Wind Partners</p>
+            </div>
+            <div class="project-card__stats">
+              <div>
+                <p class="project-card__stat-key">Project Volume</p>
+                <p class="project-card__stat-val">€ 67M</p>
+              </div>
+              <div>
+                <p class="project-card__stat-key">Target IRR</p>
+                <p class="project-card__stat-val project-card__stat-val--green">8.8% p.a.</p>
+              </div>
+              <div>
+                <p class="project-card__stat-key">Capacity</p>
+                <p class="project-card__stat-val">58 MW</p>
+              </div>
+              <div>
+                <p class="project-card__stat-key">Duration</p>
+                <p class="project-card__stat-val">14 Years</p>
+              </div>
+              <div>
+                <p class="project-card__stat-key">Location</p>
+                <p class="project-card__stat-val">Andalusia, ES</p>
+              </div>
+              <div>
+                <p class="project-card__stat-key">Revenue Type</p>
+                <p class="project-card__stat-val">PPA</p>
+              </div>
+            </div>
+            <div class="project-card__progress">
+              <div class="project-card__progress-label">
+                <span>Funding Progress</span>
+                <span>45%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-bar__fill" data-pct="45" style="width:0"></div>
+              </div>
+            </div>
+          </div>
+          <div class="project-card__footer">
+            <a href="/investors#investors-waitlist" class="project-card__cta">
+              Request Full Documentation &rarr;
+            </a>
+          </div>
+        </article>
+
+        <!-- ─── Card 4: Loire Valley Agrivoltaic ──────────── -->
+        <article class="project-card" data-tech="hybrid" data-status="open">
+          <div class="project-card__header">
+            <span class="tag tag--green-pale">Agrivoltaic</span>
+            <span class="tag tag--green-pale" style="background:transparent;border:1px solid var(--green);color:var(--green)">Open</span>
+          </div>
+          <div class="project-card__body">
+            <div>
+              <h2 class="project-card__title">Loire Valley Agrivoltaic<br>· France</h2>
+              <p class="project-card__developer">Hexagone Renewables</p>
+            </div>
+            <div class="project-card__stats">
+              <div>
+                <p class="project-card__stat-key">Project Volume</p>
+                <p class="project-card__stat-val">€ 22M</p>
+              </div>
+              <div>
+                <p class="project-card__stat-key">Target IRR</p>
+                <p class="project-card__stat-val project-card__stat-val--green">8.1% p.a.</p>
+              </div>
+              <div>
+                <p class="project-card__stat-key">Capacity</p>
+                <p class="project-card__stat-val">18 MW</p>
+              </div>
+              <div>
+                <p class="project-card__stat-key">Duration</p>
+                <p class="project-card__stat-val">10 Years</p>
+              </div>
+              <div>
+                <p class="project-card__stat-key">Location</p>
+                <p class="project-card__stat-val">Loire, FR</p>
+              </div>
+              <div>
+                <p class="project-card__stat-key">Revenue Type</p>
+                <p class="project-card__stat-val">FiT</p>
+              </div>
+            </div>
+            <div class="project-card__progress">
+              <div class="project-card__progress-label">
+                <span>Funding Progress</span>
+                <span>31%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-bar__fill" data-pct="31" style="width:0"></div>
+              </div>
+            </div>
+          </div>
+          <div class="project-card__footer">
+            <a href="/investors#investors-waitlist" class="project-card__cta">
+              Request Full Documentation &rarr;
+            </a>
+          </div>
+        </article>
+
+        <!-- ─── Card 5: Puglia Solar II ───────────────────── -->
+        <article class="project-card" data-tech="solar" data-status="coming">
+          <div class="project-card__header">
+            <span class="tag tag--green-pale">Solar PV</span>
+            <span class="tag tag--grey">Coming Soon</span>
+          </div>
+          <div class="project-card__body">
+            <div>
+              <h2 class="project-card__title">Puglia Solar II<br>· Italy</h2>
+              <p class="project-card__developer">Meridian Energia</p>
+            </div>
+            <div class="project-card__stats">
+              <div>
+                <p class="project-card__stat-key">Project Volume</p>
+                <p class="project-card__stat-val">€ 35M</p>
+              </div>
+              <div>
+                <p class="project-card__stat-key">Target IRR</p>
+                <p class="project-card__stat-val project-card__stat-val--green">7.9% p.a.</p>
+              </div>
+              <div>
+                <p class="project-card__stat-key">Capacity</p>
+                <p class="project-card__stat-val">30 MW</p>
+              </div>
+              <div>
+                <p class="project-card__stat-key">Duration</p>
+                <p class="project-card__stat-val">12 Years</p>
+              </div>
+              <div>
+                <p class="project-card__stat-key">Location</p>
+                <p class="project-card__stat-val">Puglia, IT</p>
+              </div>
+              <div>
+                <p class="project-card__stat-key">Revenue Type</p>
+                <p class="project-card__stat-val">PPA + FiT</p>
+              </div>
+            </div>
+            <div class="project-card__progress">
+              <div class="project-card__progress-label">
+                <span>Opens for investment</span>
+                <span style="color:var(--mid-grey)">Q3 2025</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-bar__fill" data-pct="0" style="width:0;background:var(--light-grey)"></div>
+              </div>
+            </div>
+          </div>
+          <div class="project-card__footer">
+            <a href="/#waitlist-cta" class="project-card__cta" style="color:var(--mid-grey)">
+              Join Waitlist for Early Access &rarr;
+            </a>
+          </div>
+        </article>
+
+        <!-- ─── Card 6: Baltic Offshore I ────────────────── -->
+        <article class="project-card" data-tech="wind" data-status="coming">
+          <div class="project-card__header">
+            <span class="tag tag--charcoal" style="background:rgba(61,122,90,0.08);color:var(--green)">Wind — Offshore</span>
+            <span class="tag tag--grey">Coming Soon</span>
+          </div>
+          <div class="project-card__body">
+            <div>
+              <h2 class="project-card__title">Baltic Offshore I<br>· Denmark</h2>
+              <p class="project-card__developer">Nordic Offshore Capital</p>
+            </div>
+            <div class="project-card__stats">
+              <div>
+                <p class="project-card__stat-key">Project Volume</p>
+                <p class="project-card__stat-val">€ 180M</p>
+              </div>
+              <div>
+                <p class="project-card__stat-key">Target IRR</p>
+                <p class="project-card__stat-val project-card__stat-val--green">9.6% p.a.</p>
+              </div>
+              <div>
+                <p class="project-card__stat-key">Capacity</p>
+                <p class="project-card__stat-val">175 MW</p>
+              </div>
+              <div>
+                <p class="project-card__stat-key">Duration</p>
+                <p class="project-card__stat-val">18 Years</p>
+              </div>
+              <div>
+                <p class="project-card__stat-key">Location</p>
+                <p class="project-card__stat-val">Baltic Sea, DK</p>
+              </div>
+              <div>
+                <p class="project-card__stat-key">Revenue Type</p>
+                <p class="project-card__stat-val">CfD</p>
+              </div>
+            </div>
+            <div class="project-card__progress">
+              <div class="project-card__progress-label">
+                <span>Opens for investment</span>
+                <span style="color:var(--mid-grey)">Q4 2025</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-bar__fill" data-pct="0" style="width:0;background:var(--light-grey)"></div>
+              </div>
+            </div>
+          </div>
+          <div class="project-card__footer">
+            <a href="/#waitlist-cta" class="project-card__cta" style="color:var(--mid-grey)">
+              Join Waitlist for Early Access &rarr;
+            </a>
+          </div>
+        </article>
+
+      </div><!-- /project-listings-grid -->
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════
+       DISCLAIMER STRIP
+  ════════════════════════════════════════════════════════════ -->
+  <div style="background:var(--charcoal);padding:28px 0;">
+    <div class="container">
+      <p style="font-size:11px;color:var(--mid-grey);line-height:1.7;max-width:860px;">
+        <strong style="color:rgba(248,247,244,0.6);font-weight:500;">Important:</strong>
+        All project details, IRR targets, and capacity figures are indicative and subject to change.
+        Full documentation — including independent technical assessments, financial models, and legal
+        disclosures — is made available exclusively to registered investors. IRR figures are
+        targeted projections, not guaranteed returns. Capital at risk.
+      </p>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       WAITLIST CTA
+  ════════════════════════════════════════════════════════════ -->
+  <section class="section section--green-pale waitlist-cta">
+    <div class="container">
+      <h2>Gain Access to Full Project Documentation</h2>
+      <p>Registered investors receive complete technical files, financial models, and priority allocation on new listings.</p>
+
+      <form class="waitlist-form" data-form="waitlist" data-success-msg="confirm" data-source="listings" novalidate>
+        <div class="waitlist-form__row">
+          <input type="email" placeholder="Your email address" aria-label="Email address" required/>
+          <button type="submit" class="btn-green">Register for Access &rarr;</button>
+        </div>
+        <div class="waitlist-form__success" role="alert" aria-live="polite">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="8" cy="8" r="7.25" stroke="#3D7A5A" stroke-width="1.5"/>
+            <path d="M4.5 8.5L7 11l4.5-5" stroke="#3D7A5A" stroke-width="1.5" stroke-linecap="square"/>
+          </svg>
+          Thank you — check your inbox for a confirmation.
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════
+       DEVELOPER PITCH
+  ════════════════════════════════════════════════════════════ -->
+  <section class="section">
+    <div class="container">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:40px;flex-wrap:wrap;">
+        <div style="max-width:520px;">
+          <span class="section-label">For Project Developers</span>
+          <h2 style="margin-top:32px;margin-bottom:16px">Have a Project to List?</h2>
+          <p>If you are developing a shovel-ready or late-stage wind or solar project and are looking for distributed private capital, we'd like to hear from you. Submit a project brief and our team will be in touch within 5 business days.</p>
+        </div>
+        <a href="/projects#project-submit" class="btn-primary" style="flex-shrink:0">Submit a Project &rarr;</a>
+      </div>
+    </div>
+  </section>
+
+</Layout>

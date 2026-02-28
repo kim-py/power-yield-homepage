@@ -1,0 +1,18 @@
+name = "power-yield"
+compatibility_date = "2024-09-23"
+pages_build_output_dir = "dist"
+
+# D1 database — will be filled in Phase 2
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "power-yield-db"
+# database_id = "YOUR_D1_DATABASE_ID"
+
+# KV namespace for rate limiting — will be filled in Phase 3
+# [[kv_namespaces]]
+# binding = "RATE_LIMIT"
+# id = "YOUR_KV_NAMESPACE_ID"
+
+# Cloudflare Email Workers — will be filled in Phase 3
+# [send_email]
+# binding = "EMAIL"

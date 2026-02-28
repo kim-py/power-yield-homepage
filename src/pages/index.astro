@@ -1,0 +1,256 @@
+---
+import Layout from '../layouts/Layout.astro';
+export const prerender = true;
+---
+<Layout title="Power Yield — Green Energy Infrastructure Investing">
+
+  <!-- ═══════════════════════════════════════════════════════
+       HERO
+  ════════════════════════════════════════════════════════════ -->
+  <section class="hero" id="waitlist-hero">
+    <!-- Faint decorative pattern -->
+    <div class="hero__pattern" aria-hidden="true">
+      <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="grid" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
+            <path d="M 80 0 L 0 0 0 80" fill="none" stroke="#1E1E1C" stroke-width="0.8"/>
+          </pattern>
+          <pattern id="turbine" x="0" y="0" width="320" height="320" patternUnits="userSpaceOnUse">
+            <circle cx="160" cy="160" r="4" fill="#3D7A5A"/>
+            <line x1="160" y1="160" x2="160" y2="60" stroke="#3D7A5A" stroke-width="1.5"/>
+            <line x1="160" y1="160" x2="247" y2="220" stroke="#3D7A5A" stroke-width="1.5"/>
+            <line x1="160" y1="160" x2="73" y2="220" stroke="#3D7A5A" stroke-width="1.5"/>
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#grid)"/>
+        <rect width="100%" height="100%" fill="url(#turbine)" opacity="0.5"/>
+      </svg>
+    </div>
+
+    <div class="container">
+      <div class="hero__inner">
+        <p class="hero__eyebrow">Early Access · Now Open</p>
+
+        <h1>Institutional Returns.<br><em>Accessible to All.</em></h1>
+
+        <p class="hero__sub">
+          Power Yield opens large-scale wind and solar infrastructure to private investors —
+          with fractional participation, full transparency, and measurable climate impact.
+        </p>
+
+        <!-- Waitlist form -->
+        <form class="waitlist-form" data-form="waitlist" data-success-msg="default" data-source="hero" novalidate>
+          <div class="waitlist-form__row">
+            <input type="email" placeholder="Your email address" aria-label="Email address" required/>
+            <button type="submit" class="btn-green">Join the Waitlist &rarr;</button>
+          </div>
+          <p class="waitlist-form__note">Join 1,200+ investors already on the waitlist. No commitment required.</p>
+          <div class="waitlist-form__success" role="alert" aria-live="polite">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="8" r="7.25" stroke="#3D7A5A" stroke-width="1.5"/>
+              <path d="M4.5 8.5L7 11l4.5-5" stroke="#3D7A5A" stroke-width="1.5" stroke-linecap="square"/>
+            </svg>
+            You're on the list. We'll be in touch.
+          </div>
+        </form>
+
+        <!-- Trust strip -->
+        <div class="trust-strip">
+          <div class="trust-stat">
+            <span class="trust-stat__number">€ 250M+</span>
+            <span class="trust-stat__label">Target project pipeline</span>
+          </div>
+          <div class="trust-stat">
+            <span class="trust-stat__number">8–10%</span>
+            <span class="trust-stat__label">Target IRR</span>
+          </div>
+          <div class="trust-stat">
+            <span class="trust-stat__number">12+</span>
+            <span class="trust-stat__label">Projects in pipeline</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════
+       HOW IT WORKS
+  ════════════════════════════════════════════════════════════ -->
+  <section class="section section--off-white">
+    <div class="container">
+      <span class="section-label">How It Works</span>
+
+      <div class="steps-grid">
+        <!-- Step 1 -->
+        <div class="step-card">
+          <div class="step-card__icon">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <circle cx="15" cy="15" r="9.5" stroke="currentColor" stroke-width="1.5"/>
+              <line x1="22" y1="22" x2="30" y2="30" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"/>
+            </svg>
+          </div>
+          <div class="step-card__number">01</div>
+          <h3>Discover</h3>
+          <p>Browse curated wind and solar projects selected by our team of infrastructure specialists.</p>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step-card">
+          <div class="step-card__icon">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <circle cx="18" cy="18" r="15" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M11 18.5L15.5 23L25 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"/>
+            </svg>
+          </div>
+          <div class="step-card__number">02</div>
+          <h3>Commit</h3>
+          <p>Reserve your fractional share. Capital is only deployed once the project reaches its funding threshold.</p>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="step-card">
+          <div class="step-card__icon">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <polyline points="4,28 12,18 18,22 24,12 32,8" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" fill="none"/>
+              <line x1="4" y1="32" x2="32" y2="32" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
+          </div>
+          <div class="step-card__number">03</div>
+          <h3>Earn &amp; Impact</h3>
+          <p>Receive milestone reports, track clean energy output, and earn structured returns over the project lifecycle.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════
+       FEATURED PROJECTS
+  ════════════════════════════════════════════════════════════ -->
+  <section class="section">
+    <div class="container">
+      <span class="section-label">Featured Projects</span>
+
+      <div class="cards-grid">
+        <!-- Card 1 — Light -->
+        <article class="invest-card">
+          <span class="tag tag--green-pale invest-card__tag">Solar Energy</span>
+          <h2 class="invest-card__title">Algarve Solar I · Portugal</h2>
+          <p class="invest-card__developer">Iberian Renewable Fund</p>
+          <div class="invest-card__stats">
+            <div>
+              <div class="invest-card__stat-key">Project Volume</div>
+              <div class="invest-card__stat-val">€ 48.5M</div>
+            </div>
+            <div>
+              <div class="invest-card__stat-key">Target IRR</div>
+              <div class="invest-card__stat-val">8.4%</div>
+            </div>
+            <div>
+              <div class="invest-card__stat-key">Duration</div>
+              <div class="invest-card__stat-val">12 Years</div>
+            </div>
+            <div>
+              <div class="invest-card__stat-key">Status</div>
+              <div class="invest-card__stat-val" style="color:var(--green);font-weight:500">Open</div>
+            </div>
+          </div>
+          <a href="/projects" class="invest-card__cta">View Project Details &rarr;</a>
+        </article>
+
+        <!-- Card 2 — Dark -->
+        <article class="invest-card invest-card--dark">
+          <span class="tag tag--charcoal invest-card__tag" style="background:rgba(255,255,255,0.12);color:var(--white)">Wind Energy</span>
+          <h2 class="invest-card__title">North Sea Offshore II · Germany</h2>
+          <p class="invest-card__developer" style="color:var(--mid-grey)">Northern Yield Fund</p>
+          <div class="invest-card__stats">
+            <div>
+              <div class="invest-card__stat-key">Project Volume</div>
+              <div class="invest-card__stat-val">€ 124M</div>
+            </div>
+            <div>
+              <div class="invest-card__stat-key">Target IRR</div>
+              <div class="invest-card__stat-val">9.1%</div>
+            </div>
+            <div>
+              <div class="invest-card__stat-key">Duration</div>
+              <div class="invest-card__stat-val">15 Years</div>
+            </div>
+            <div>
+              <div class="invest-card__stat-key">Status</div>
+              <div class="invest-card__stat-val" style="color:var(--gold);font-weight:500">Closing Soon</div>
+            </div>
+          </div>
+          <a href="/projects" class="invest-card__cta">View Project Details &rarr;</a>
+        </article>
+      </div>
+
+      <div class="cards-cta">
+        <a href="/listings" class="btn-outline">Explore All Projects</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════
+       IMPACT METRICS STRIP
+  ════════════════════════════════════════════════════════════ -->
+  <section class="impact-strip" aria-label="Impact metrics">
+    <div class="container">
+      <div class="impact-strip__grid">
+        <div class="impact-metric">
+          <span class="impact-metric__number" data-target="2.4" data-suffix=" GW" aria-label="2.4 gigawatts">2.4 GW</span>
+          <span class="impact-metric__label">Clean energy capacity in pipeline</span>
+        </div>
+        <div class="impact-metric">
+          <span class="impact-metric__number" data-target="1.1" data-suffix="M t" aria-label="1.1 million tonnes">1.1M t</span>
+          <span class="impact-metric__label">Estimated annual CO₂ savings</span>
+        </div>
+        <div class="impact-metric">
+          <span class="impact-metric__number" data-target="26" data-suffix="" aria-label="26">26</span>
+          <span class="impact-metric__label">European markets targeted</span>
+        </div>
+        <div class="impact-metric">
+          <span class="impact-metric__number" data-target="500" data-suffix="M" aria-label="500 million euros">€500M</span>
+          <span class="impact-metric__label">Total deployment ambition</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════
+       WAITLIST CTA (second touchpoint)
+  ════════════════════════════════════════════════════════════ -->
+  <section class="section section--green-pale waitlist-cta" id="waitlist-cta">
+    <div class="container">
+      <h2>Get Priority Access to the First Projects</h2>
+      <p>Register now and be among the first to invest when our platform launches.</p>
+
+      <form class="waitlist-form" data-form="waitlist" data-success-msg="confirm" data-source="cta" novalidate>
+        <div class="waitlist-form__row">
+          <input type="email" placeholder="Your email address" aria-label="Email address" required/>
+          <button type="submit" class="btn-green">Join the Waitlist &rarr;</button>
+        </div>
+        <div class="waitlist-form__success" role="alert" aria-live="polite">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="8" cy="8" r="7.25" stroke="#3D7A5A" stroke-width="1.5"/>
+            <path d="M4.5 8.5L7 11l4.5-5" stroke="#3D7A5A" stroke-width="1.5" stroke-linecap="square"/>
+          </svg>
+          Thank you — check your inbox for a confirmation.
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════
+       TESTIMONIAL / QUOTE
+  ════════════════════════════════════════════════════════════ -->
+  <section class="quote-section">
+    <div class="quote-block">
+      <blockquote>
+        We built Power Yield because we believe the energy transition needs patient, distributed
+        capital — and that private investors deserve access to the same quality of deals as institutions.
+      </blockquote>
+      <p class="quote-attribution">— The Power Yield Team</p>
+    </div>
+  </section>
+
+</Layout>
