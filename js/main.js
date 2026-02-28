@@ -105,29 +105,44 @@
         // Store in localStorage
         localStorage.setItem('py_waitlist_email', email);
 
-        // Open mail client
-        const mailBody = 'Hi i want to join the waitlist.\n\nMy email: ' + email;
-        const mailtoLink = 'mailto:hi@power-yield.com'
-          + '?subject=' + encodeURIComponent('Waitlist Registration')
-          + '&body='    + encodeURIComponent(mailBody);
-        window.location.href = mailtoLink;
-
-        // Determine success message based on data attribute
-        const msgType = form.dataset.successMsg || 'default';
-        const messages = {
-          confirm: "Thank you — check your inbox for a confirmation.",
-          default: "You're on the list. We'll be in touch."
-        };
-        const msg = messages[msgType] || messages.default;
-
-        // Update DOM
-        if (successEl) {
-          successEl.textContent = msg;
-          successEl.classList.add('visible');
+        // Disable button during request
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Registering\u2026';
         }
-        if (formRow) formRow.style.display = 'none';
-        const noteEl = form.querySelector('.waitlist-form__note');
-        if (noteEl) noteEl.style.display = 'none';
+
+        const source = form.dataset.source || 'unknown';
+
+        fetch('/api/waitlist', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, source }),
+        })
+          .then(function () {
+            // Determine success message based on data attribute
+            const msgType = form.dataset.successMsg || 'default';
+            const messages = {
+              confirm: "Thank you \u2014 check your inbox for a confirmation.",
+              default: "You\u2019re on the list. We\u2019ll be in touch."
+            };
+            const msg = messages[msgType] || messages.default;
+
+            // Update DOM
+            if (successEl) {
+              successEl.textContent = msg;
+              successEl.classList.add('visible');
+            }
+            if (formRow) formRow.style.display = 'none';
+            const noteEl = form.querySelector('.waitlist-form__note');
+            if (noteEl) noteEl.style.display = 'none';
+          })
+          .catch(function () {
+            // Re-enable button on network error
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.textContent = 'Join the Waitlist \u2192';
+            }
+          });
       });
     });
   }
@@ -161,14 +176,47 @@
 
       if (!valid) return;
 
-      // Show success
-      const successEl = projectForm.querySelector('.form-success');
-      if (successEl) successEl.classList.add('visible');
+      // Disable submit button during request
+      const projSubmitBtn = projectForm.querySelector('button[type="submit"]');
+      if (projSubmitBtn) {
+        projSubmitBtn.disabled = true;
+        projSubmitBtn.textContent = 'Sending\u2026';
+      }
 
-      // Hide form fields (keep the grid, just hide inputs + submit)
-      projectForm.querySelectorAll('.form-field, .form-submit-row').forEach(el => {
-        el.style.display = 'none';
-      });
+      // Collect form data
+      const payload = {
+        company_name:  (projectForm.querySelector('#company-name')  || {}).value,
+        contact_name:  (projectForm.querySelector('#contact-name')  || {}).value,
+        contact_email: (projectForm.querySelector('#contact-email') || {}).value,
+        project_name:  (projectForm.querySelector('#project-name')  || {}).value,
+        technology:    (projectForm.querySelector('#tech-type')     || {}).value,
+        volume_eur:    (projectForm.querySelector('#project-volume') || {}).value,
+        stage:         (projectForm.querySelector('#project-stage') || {}).value,
+        country:       (projectForm.querySelector('#country')       || {}).value,
+        description:   (projectForm.querySelector('#description')   || {}).value,
+      };
+
+      fetch('/api/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+        .then(function () {
+          // Show success
+          const successEl = projectForm.querySelector('.form-success');
+          if (successEl) successEl.classList.add('visible');
+
+          // Hide form fields (keep the grid, just hide inputs + submit)
+          projectForm.querySelectorAll('.form-field, .form-submit-row').forEach(el => {
+            el.style.display = 'none';
+          });
+        })
+        .catch(function () {
+          if (projSubmitBtn) {
+            projSubmitBtn.disabled = false;
+            projSubmitBtn.textContent = 'Send Project Overview \u2192';
+          }
+        });
     });
 
     // Live validation: clear error on input
