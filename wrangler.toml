@@ -7,11 +7,16 @@ binding = "DB"
 database_name = "power-yield-db"
 database_id = "d4e82b72-ecbc-4d51-ac8c-ed6833e85116"
 
-# KV namespace for rate limiting — will be filled in Phase 3
-# [[kv_namespaces]]
-# binding = "RATE_LIMIT"
-# id = "YOUR_KV_NAMESPACE_ID"
+# Phase 3: KV Rate Limiting
+# Create namespace with: wrangler kv namespace create RATE_LIMIT
+# Then replace the id below with the output
+[[kv_namespaces]]
+binding = "RATE_LIMIT"
+id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"
 
-# Cloudflare Email Workers — will be filled in Phase 3
-# [send_email]
-# binding = "EMAIL"
+# Phase 3: Cloudflare Email Workers
+# Requires Email Routing to be enabled for your domain in the Cloudflare dashboard.
+# The from-address (noreply@power-yield.com) must be verified or the domain
+# must have Cloudflare Email Routing active.
+[[send_email]]
+name = "EMAIL"
