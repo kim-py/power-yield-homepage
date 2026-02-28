@@ -5,7 +5,7 @@ pages_build_output_dir = "dist"
 [[d1_databases]]
 binding = "DB"
 database_name = "power-yield-db"
-database_id = "YOUR_D1_DATABASE_ID"  # replace after: wrangler d1 create power-yield-db
+database_id = "d4e82b72-ecbc-4d51-ac8c-ed6833e85116"
 
 # KV namespace for rate limiting — will be filled in Phase 3
 # [[kv_namespaces]]
