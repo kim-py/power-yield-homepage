@@ -1,0 +1,22 @@
+---
+import AdminLayout from '../../../../layouts/AdminLayout.astro';
+import ProjectForm from '../../../../components/ProjectForm.astro';
+export const prerender = false;
+
+const { id } = Astro.params;
+const { DB } = Astro.locals.runtime.env;
+const project = await DB.prepare('SELECT * FROM projects WHERE id = ?').bind(id).first<any>();
+
+if (!project) return Astro.redirect('/admin/projects');
+---
+<AdminLayout title={`Edit — ${project.name}`}>
+  <div style="max-width:840px;">
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:32px;flex-wrap:wrap;">
+      <a href="/admin/projects" style="color:var(--mid-grey);text-decoration:none;font-size:14px;">← Projects</a>
+      <h1 style="font-size:28px;">Edit Project</h1>
+    </div>
+    <div style="background:white;padding:40px;border-radius:8px;border:1px solid var(--light-grey);">
+      <ProjectForm project={project} action={`/api/admin/projects/${id}`} patchMethod={true} />
+    </div>
+  </div>
+</AdminLayout>

@@ -1,0 +1,84 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+export const prerender = false;
+
+const { DB } = Astro.locals.runtime.env;
+const { results: projects } = await DB.prepare(
+  'SELECT * FROM projects ORDER BY display_order ASC, id ASC'
+).all<any>();
+
+const fmt = (n: number) => `€ ${(n / 1_000_000).toFixed(1)}M`;
+const statusColors: Record<string, string> = {
+  open:    'background:rgba(61,122,90,0.1);color:var(--green)',
+  closing: 'background:rgba(181,151,90,0.15);color:var(--gold)',
+  coming:  'background:var(--light-grey);color:var(--mid-grey)',
+};
+---
+<AdminLayout title="Projects">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;flex-wrap:wrap;gap:16px;">
+    <div>
+      <h1 style="font-size:28px;margin-bottom:4px;">Projects</h1>
+      <p style="color:var(--mid-grey);font-size:14px;">{projects.length} total</p>
+    </div>
+    <a href="/admin/projects/new" class="btn-green">+ Add Project</a>
+  </div>
+
+  <div style="background:white;border-radius:8px;border:1px solid var(--light-grey);overflow:auto;">
+    <table style="width:100%;border-collapse:collapse;font-size:14px;min-width:700px;">
+      <thead>
+        <tr style="border-bottom:2px solid var(--light-grey);">
+          <th style="padding:12px 16px;text-align:left;font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--mid-grey);">Project</th>
+          <th style="padding:12px 16px;text-align:left;font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--mid-grey);">Technology</th>
+          <th style="padding:12px 16px;text-align:left;font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--mid-grey);">Status</th>
+          <th style="padding:12px 16px;text-align:right;font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--mid-grey);">Volume</th>
+          <th style="padding:12px 16px;text-align:right;font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--mid-grey);">IRR</th>
+          <th style="padding:12px 16px;text-align:center;font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--mid-grey);">Visible</th>
+          <th style="padding:12px 16px;text-align:right;font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--mid-grey);">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {projects.map((p: any, i: number) => (
+          <tr style={`border-bottom:${i < projects.length - 1 ? '1px solid var(--light-grey)' : 'none'};opacity:${p.is_visible ? 1 : 0.45};`}>
+            <td style="padding:14px 16px;">
+              <strong style="display:block;margin-bottom:2px;">{p.name}</strong>
+              <span style="color:var(--mid-grey);font-size:12px;">{p.location}</span>
+            </td>
+            <td style="padding:14px 16px;color:var(--mid-grey);font-size:13px;">{p.technology_label}</td>
+            <td style="padding:14px 16px;">
+              <span style={`font-size:12px;padding:3px 10px;border-radius:100px;font-weight:500;${statusColors[p.status] ?? ''}`}>
+                {p.status}
+              </span>
+            </td>
+            <td style="padding:14px 16px;text-align:right;font-size:13px;">{fmt(p.volume_eur)}</td>
+            <td style="padding:14px 16px;text-align:right;color:var(--green);font-size:13px;font-weight:500;">{p.target_irr}%</td>
+            <td style="padding:14px 16px;text-align:center;">
+              <form method="POST" action={`/api/admin/projects/${p.id}`} style="display:inline;">
+                <input type="hidden" name="_method" value="PATCH" />
+                <input type="hidden" name="_toggle_visible" value="1" />
+                <input type="hidden" name="is_visible" value={p.is_visible ? '0' : '1'} />
+                <button type="submit" title={p.is_visible ? 'Click to hide' : 'Click to show'}
+                  style="background:none;border:none;cursor:pointer;font-size:16px;padding:4px;">
+                  {p.is_visible ? '✅' : '⬜'}
+                </button>
+              </form>
+            </td>
+            <td style="padding:14px 16px;text-align:right;white-space:nowrap;">
+              <a href={`/admin/projects/${p.id}/edit`}
+                style="color:var(--green);font-size:13px;text-decoration:none;font-weight:500;margin-right:16px;">
+                Edit
+              </a>
+              <form method="POST" action={`/api/admin/projects/${p.id}`} style="display:inline;"
+                onsubmit="return confirm('Delete this project? This cannot be undone.')">
+                <input type="hidden" name="_method" value="DELETE" />
+                <button type="submit"
+                  style="background:none;border:none;cursor:pointer;color:#c0392b;font-size:13px;font-weight:500;">
+                  Delete
+                </button>
+              </form>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</AdminLayout>

@@ -3,6 +3,7 @@
 
 interface Env {
   DB: D1Database;
+  ADMIN_PASSWORD: string;
   // Phase 3: RATE_LIMIT: KVNamespace; EMAIL: SendEmail;
 }
 

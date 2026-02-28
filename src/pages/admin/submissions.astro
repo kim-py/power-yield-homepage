@@ -1,0 +1,54 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+export const prerender = false;
+
+const { DB } = Astro.locals.runtime.env;
+const { results: submissions } = await DB.prepare(
+  'SELECT * FROM project_submissions ORDER BY created_at DESC'
+).all<any>();
+
+const statusColors: Record<string, string> = {
+  new:       'background:rgba(61,122,90,0.1);color:var(--green)',
+  reviewing: 'background:rgba(181,151,90,0.15);color:var(--gold)',
+  accepted:  'background:rgba(61,122,90,0.15);color:var(--green)',
+  declined:  'background:var(--light-grey);color:var(--mid-grey)',
+};
+---
+<AdminLayout title="Submissions">
+  <h1 style="font-size:28px;margin-bottom:6px;">Project Submissions</h1>
+  <p style="color:var(--mid-grey);margin-bottom:32px;font-size:15px;">Incoming submissions from project developers.</p>
+
+  {submissions.length === 0 ? (
+    <div style="background:white;padding:56px;border-radius:8px;border:1px solid var(--light-grey);text-align:center;">
+      <p style="color:var(--mid-grey);margin-bottom:8px;font-size:16px;">No submissions yet.</p>
+      <p style="color:var(--mid-grey);font-size:14px;">Once Phase 3 (form backend) is active, submissions will appear here.</p>
+    </div>
+  ) : (
+    <div style="display:grid;gap:16px;">
+      {submissions.map((s: any) => (
+        <div style="background:white;padding:28px;border-radius:8px;border:1px solid var(--light-grey);">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:20px;flex-wrap:wrap;">
+            <div>
+              <strong style="font-size:17px;">{s.project_name}</strong>
+              <span style={`margin-left:10px;font-size:12px;padding:3px 10px;border-radius:100px;font-weight:500;${statusColors[s.status] ?? ''}`}>
+                {s.status}
+              </span>
+            </div>
+            <span style="color:var(--mid-grey);font-size:13px;">{String(s.created_at).slice(0, 10)}</span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;font-size:13px;margin-bottom:16px;">
+            <div><span style="color:var(--mid-grey);">Company:</span> <strong>{s.company_name}</strong></div>
+            <div><span style="color:var(--mid-grey);">Contact:</span> <strong>{s.contact_name}</strong> · <a href={`mailto:${s.contact_email}`} style="color:var(--green);">{s.contact_email}</a></div>
+            <div><span style="color:var(--mid-grey);">Technology:</span> <strong>{s.technology}</strong></div>
+            <div><span style="color:var(--mid-grey);">Country:</span> <strong>{s.country}</strong></div>
+            <div><span style="color:var(--mid-grey);">Stage:</span> <strong>{s.stage}</strong></div>
+            {s.volume_eur && <div><span style="color:var(--mid-grey);">Volume:</span> <strong>€ {Number(s.volume_eur).toLocaleString()}</strong></div>}
+          </div>
+          {s.description && (
+            <p style="font-size:14px;color:var(--mid-grey);border-top:1px solid var(--light-grey);padding-top:16px;line-height:1.6;">{s.description}</p>
+          )}
+        </div>
+      ))}
+    </div>
+  )}
+</AdminLayout>

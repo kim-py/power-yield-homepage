@@ -1,0 +1,39 @@
+---
+interface Props {
+  title: string;
+}
+const { title } = Astro.props;
+const path = Astro.url.pathname;
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title} — Power Yield Admin</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body style="background:var(--off-white);min-height:100vh;margin:0;">
+
+  <header style="background:var(--charcoal);padding:0;position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(255,255,255,0.06);">
+    <div class="container" style="display:flex;align-items:center;justify-content:space-between;height:56px;">
+      <a href="/admin" style="color:var(--cream);font-weight:700;text-decoration:none;font-size:15px;letter-spacing:-0.02em;">
+        Power Yield <span style="color:var(--green);font-weight:400;">Admin</span>
+      </a>
+      <nav style="display:flex;gap:4px;align-items:center;">
+        <a href="/admin" style={`padding:6px 12px;border-radius:4px;font-size:13px;text-decoration:none;${path === '/admin' ? 'color:var(--cream);background:rgba(255,255,255,0.08)' : 'color:var(--mid-grey)'}`}>Dashboard</a>
+        <a href="/admin/projects" style={`padding:6px 12px;border-radius:4px;font-size:13px;text-decoration:none;${path.startsWith('/admin/projects') ? 'color:var(--cream);background:rgba(255,255,255,0.08)' : 'color:var(--mid-grey)'}`}>Projects</a>
+        <a href="/admin/submissions" style={`padding:6px 12px;border-radius:4px;font-size:13px;text-decoration:none;${path === '/admin/submissions' ? 'color:var(--cream);background:rgba(255,255,255,0.08)' : 'color:var(--mid-grey)'}`}>Submissions</a>
+        <a href="/api/admin/logout" style="padding:6px 12px;border-radius:4px;font-size:13px;text-decoration:none;color:var(--mid-grey);margin-left:8px;border:1px solid rgba(255,255,255,0.1);">Logout</a>
+      </nav>
+    </div>
+  </header>
+
+  <main style="padding:40px 0 80px;">
+    <div class="container">
+      <slot />
+    </div>
+  </main>
+
+</body>
+</html>

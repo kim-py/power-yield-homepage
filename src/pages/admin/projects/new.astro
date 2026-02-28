@@ -1,0 +1,16 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import ProjectForm from '../../../components/ProjectForm.astro';
+export const prerender = false;
+---
+<AdminLayout title="New Project">
+  <div style="max-width:840px;">
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:32px;flex-wrap:wrap;">
+      <a href="/admin/projects" style="color:var(--mid-grey);text-decoration:none;font-size:14px;">← Projects</a>
+      <h1 style="font-size:28px;">New Project</h1>
+    </div>
+    <div style="background:white;padding:40px;border-radius:8px;border:1px solid var(--light-grey);">
+      <ProjectForm action="/api/admin/projects" />
+    </div>
+  </div>
+</AdminLayout>
