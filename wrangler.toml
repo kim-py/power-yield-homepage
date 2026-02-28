@@ -14,9 +14,5 @@ database_id = "d4e82b72-ecbc-4d51-ac8c-ed6833e85116"
 binding = "RATE_LIMIT"
 id = "250a0aa2cb184948bf1cb7ca3313fdce"
 
-# Phase 3: Cloudflare Email Workers
-# Requires Email Routing to be enabled for your domain in the Cloudflare dashboard.
-# The from-address (noreply@power-yield.com) must be verified or the domain
-# must have Cloudflare Email Routing active.
-[[send_email]]
-name = "EMAIL"
+# Email notifications via Cloudflare Email Workers are not supported on Pages.
+# Admin submissions are visible in the dashboard at /admin/submissions.
