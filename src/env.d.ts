@@ -5,7 +5,7 @@ interface Env {
   DB: D1Database;
   ADMIN_PASSWORD: string;
   RATE_LIMIT: KVNamespace;
-  EMAIL: SendEmail;
+  RESEND_API_KEY: string;
 }
 
 type Runtime = import('@astrojs/cloudflare').Runtime<Env>;

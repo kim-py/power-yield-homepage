@@ -11,22 +11,20 @@ async function checkRateLimit(kv: KVNamespace | undefined, ip: string): Promise<
   return true;
 }
 
-function buildMime(from: string, to: string, subject: string, body: string): string {
-  return [
-    'MIME-Version: 1.0',
-    `Date: ${new Date().toUTCString()}`,
-    `From: ${from}`,
-    `To: ${to}`,
-    `Subject: ${subject}`,
-    'Content-Type: text/plain; charset=utf-8',
-    '',
-    body,
-  ].join('\r\n');
+async function sendResendEmail(apiKey: string, from: string, to: string, subject: string, text: string) {
+  await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ from, to: [to], subject, text }),
+  });
 }
 
 export const POST: APIRoute = async ({ request, locals }) => {
   const env = locals.runtime.env as any;
-  const { DB, RATE_LIMIT, EMAIL } = env;
+  const { DB, RATE_LIMIT, RESEND_API_KEY } = env;
 
   let body: Record<string, unknown>;
   try {
@@ -125,8 +123,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
     )
     .run();
 
-  // Notify admin via Email Workers (requires [[send_email]] binding in wrangler.toml)
-  if (EMAIL) {
+  // Notify admin via Resend
+  if (RESEND_API_KEY) {
     try {
       const volume_formatted = volume_eur
         ? `€ ${volume_eur.toLocaleString('de-DE')}`
@@ -154,25 +152,13 @@ export const POST: APIRoute = async ({ request, locals }) => {
         'View in admin: https://power-yield.com/admin/projects',
       ].join('\n');
 
-      const mime = buildMime(
+      await sendResendEmail(
+        RESEND_API_KEY,
         'Power Yield <noreply@power-yield.com>',
         'hi@power-yield.com',
         `New Project Submission: ${project_name}`,
         emailBody,
       );
-
-      const stream = new ReadableStream({
-        start(controller) {
-          controller.enqueue(new TextEncoder().encode(mime));
-          controller.close();
-        },
-      });
-      const msg = new (globalThis as any).EmailMessage(
-        'noreply@power-yield.com',
-        'hi@power-yield.com',
-        stream,
-      );
-      await EMAIL.send(msg);
     } catch {
       // Email errors must not block the submission response
     }
