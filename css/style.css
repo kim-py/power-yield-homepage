@@ -1217,6 +1217,18 @@ p {
 
 .form-success.visible { display: block; }
 
+.form-error {
+  display: none;
+  padding: 20px 24px;
+  background: #fef2f2;
+  border-left: 3px solid #c0392b;
+  grid-column: 1 / -1;
+  color: #7f1d1d;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.form-error.visible { display: block; }
+
 .form-success p {
   color: var(--green);
   font-size: 14px;

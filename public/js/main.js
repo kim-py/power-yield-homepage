@@ -207,20 +207,36 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       })
-        .then(function () {
+        .then(function (res) {
+          if (res.status === 429) {
+            // Rate limit reached
+            var errorEl = projectForm.querySelector('.form-error');
+            if (!errorEl) {
+              errorEl = document.createElement('div');
+              errorEl.className = 'form-error';
+              projectForm.querySelector('.form-submit-row').before(errorEl);
+            }
+            errorEl.innerHTML = 'You have reached the maximum of 2 project submissions per day.<br>For additional submissions, please contact us at <a href="mailto:kim@power-yield.com" style="color:var(--green);font-weight:500">kim@power-yield.com</a>';
+            errorEl.classList.add('visible');
+            if (projSubmitBtn) {
+              projSubmitBtn.disabled = false;
+              projSubmitBtn.textContent = 'Submit Project \u2192';
+            }
+            return;
+          }
           // Show success
-          const successEl = projectForm.querySelector('.form-success');
+          var successEl = projectForm.querySelector('.form-success');
           if (successEl) successEl.classList.add('visible');
 
           // Hide form fields (keep the grid, just hide inputs + submit)
-          projectForm.querySelectorAll('.form-field, .form-submit-row').forEach(el => {
+          projectForm.querySelectorAll('.form-field, .form-submit-row, .form-error').forEach(function (el) {
             el.style.display = 'none';
           });
         })
         .catch(function () {
           if (projSubmitBtn) {
             projSubmitBtn.disabled = false;
-            projSubmitBtn.textContent = 'Send Project Overview \u2192';
+            projSubmitBtn.textContent = 'Submit Project \u2192';
           }
         });
     });
