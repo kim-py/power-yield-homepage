@@ -11,22 +11,25 @@ async function checkRateLimit(kv: KVNamespace | undefined, ip: string): Promise<
   return true;
 }
 
-function buildMime(from: string, to: string, subject: string, body: string): string {
-  return [
-    'MIME-Version: 1.0',
-    `Date: ${new Date().toUTCString()}`,
-    `From: ${from}`,
-    `To: ${to}`,
-    `Subject: ${subject}`,
-    'Content-Type: text/plain; charset=utf-8',
-    '',
-    body,
-  ].join('\r\n');
+async function sendResendEmail(apiKey: string, from: string, to: string, subject: string, text: string): Promise<string | null> {
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ from, to: [to], subject, text }),
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    return `Resend error ${res.status}: ${err}`;
+  }
+  return null;
 }
 
 export const POST: APIRoute = async ({ request, locals }) => {
   const env = locals.runtime.env as any;
-  const { DB, RATE_LIMIT, EMAIL } = env;
+  const { DB, RATE_LIMIT, RESEND_API_KEY } = env;
 
   let body: Record<string, unknown>;
   try {
@@ -37,23 +40,43 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
   const get = (k: string) => String(body[k] ?? '').trim();
 
-  const company_name   = get('company_name');
-  const contact_name   = get('contact_name');
-  const contact_email  = get('contact_email');
-  const project_name   = get('project_name');
-  const technology     = get('technology');
-  const volume_raw     = get('volume_eur');
-  const stage          = get('stage');
-  const country        = get('country');
-  const description    = get('description');
+  const company_name    = get('company_name');
+  const contact_name    = get('contact_name');
+  const contact_email   = get('contact_email');
+  const project_name    = get('project_name');
+  const technology_raw  = get('technology');       // e.g. "wind|Wind — Offshore"
+  const volume_raw      = get('volume_eur');
+  const stage           = get('stage');
+  const description     = get('description');
+  const location        = get('location');
+  const region_code     = get('region_code');
+  const target_irr_raw  = get('target_irr');
+  const capacity_mw_raw = get('capacity_mw');
+  const duration_raw    = get('duration_years');
+  const revenue_type    = get('revenue_type');
+
+  // Parse technology "solar|Solar PV" → technology + technology_label
+  const [technology, technology_label] = technology_raw.includes('|')
+    ? technology_raw.split('|', 2)
+    : [technology_raw, technology_raw];
 
   // Validation
   if (!company_name || !contact_name || !contact_email || !project_name ||
-      !technology || !stage || !country || !description) {
+      !technology || !stage || !description || !location || !region_code ||
+      !target_irr_raw || !capacity_mw_raw || !duration_raw || !revenue_type) {
     return json({ error: 'Missing required fields' }, 422);
   }
   if (!EMAIL_RE.test(contact_email)) {
     return json({ error: 'Invalid email address' }, 422);
+  }
+
+  const volume_eur    = volume_raw ? Number(volume_raw) : 0;
+  const target_irr    = Number(target_irr_raw);
+  const capacity_mw   = Number(capacity_mw_raw);
+  const duration_years = Number(duration_raw);
+
+  if (isNaN(target_irr) || isNaN(capacity_mw) || isNaN(duration_years)) {
+    return json({ error: 'Invalid numeric values' }, 422);
   }
 
   // Rate limiting (2 submissions per IP per day)
@@ -62,7 +85,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     return json({ error: 'Too many submissions. Please try again tomorrow.' }, 429);
   }
 
-  // Save to D1
+  // Save contact info to project_submissions
   await DB.prepare(`
     INSERT INTO project_submissions
       (company_name, contact_name, contact_email, project_name, technology,
@@ -75,18 +98,45 @@ export const POST: APIRoute = async ({ request, locals }) => {
       contact_email,
       project_name,
       technology,
-      volume_raw ? Number(volume_raw) : null,
+      volume_eur || null,
       stage,
-      country,
+      region_code,
       description,
     )
     .run();
 
-  // Notify admin via Email Workers (requires [[send_email]] binding in wrangler.toml)
-  if (EMAIL) {
+  // Insert into projects table as invisible (pending review)
+  await DB.prepare(`
+    INSERT INTO projects
+      (name, location, developer_name, technology, technology_label, status,
+       volume_eur, target_irr, capacity_mw, duration_years, region_code,
+       revenue_type, funding_progress_pct, opens_label, is_featured, display_order, is_visible)
+    VALUES (?, ?, ?, ?, ?, 'coming', ?, ?, ?, ?, ?, ?, 0, NULL, 0, 0, 0)
+  `)
+    .bind(
+      project_name,
+      location,
+      company_name,
+      technology,
+      technology_label,
+      volume_eur,
+      target_irr,
+      capacity_mw,
+      duration_years,
+      region_code,
+      revenue_type,
+    )
+    .run();
+
+  // Notify admin via Resend
+  // RESEND_API_KEY can be a Cloudflare binding or a process env var
+  const resendKey = RESEND_API_KEY ?? (typeof process !== 'undefined' ? process.env?.RESEND_API_KEY : undefined);
+  let emailError: string | null = null;
+
+  if (resendKey) {
     try {
-      const volume_formatted = volume_raw
-        ? `€ ${Number(volume_raw).toLocaleString('de-DE')}`
+      const volume_formatted = volume_eur
+        ? `€ ${volume_eur.toLocaleString('de-DE')}`
         : 'N/A';
 
       const emailBody = [
@@ -95,42 +145,37 @@ export const POST: APIRoute = async ({ request, locals }) => {
         `Company:     ${company_name}`,
         `Contact:     ${contact_name} <${contact_email}>`,
         `Project:     ${project_name}`,
-        `Technology:  ${technology}`,
+        `Technology:  ${technology_label}`,
+        `Location:    ${location} (${region_code})`,
         `Volume:      ${volume_formatted}`,
+        `Target IRR:  ${target_irr}%`,
+        `Capacity:    ${capacity_mw} MW`,
+        `Duration:    ${duration_years} Years`,
+        `Revenue:     ${revenue_type}`,
         `Stage:       ${stage}`,
-        `Country:     ${country}`,
         '',
         'Description:',
         description,
         '',
-        'View in admin: https://power-yield.com/admin/submissions',
+        'The project has been added to the database as invisible (pending review).',
+        'View in admin: https://power-yield.com/admin/projects',
       ].join('\n');
 
-      const mime = buildMime(
-        'Power Yield <noreply@power-yield.com>',
-        'hi@power-yield.com',
+      emailError = await sendResendEmail(
+        resendKey,
+        'Power Yield <kim@power-yield.com>',
+        'kim@power-yield.com',
         `New Project Submission: ${project_name}`,
         emailBody,
       );
-
-      const stream = new ReadableStream({
-        start(controller) {
-          controller.enqueue(new TextEncoder().encode(mime));
-          controller.close();
-        },
-      });
-      const msg = new (globalThis as any).EmailMessage(
-        'noreply@power-yield.com',
-        'hi@power-yield.com',
-        stream,
-      );
-      await EMAIL.send(msg);
-    } catch {
-      // Email errors must not block the submission response
+    } catch (e: any) {
+      emailError = e?.message ?? 'Unknown email error';
     }
+  } else {
+    emailError = 'RESEND_API_KEY not found in environment';
   }
 
-  return json({ ok: true }, 200);
+  return json({ ok: true, email_sent: !emailError, email_error: emailError }, 200);
 };
 
 function json(data: object, status: number) {

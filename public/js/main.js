@@ -184,16 +184,22 @@
       }
 
       // Collect form data
+      var val = function (sel) { return (projectForm.querySelector(sel) || {}).value || ''; };
       const payload = {
-        company_name:  (projectForm.querySelector('#company-name')  || {}).value,
-        contact_name:  (projectForm.querySelector('#contact-name')  || {}).value,
-        contact_email: (projectForm.querySelector('#contact-email') || {}).value,
-        project_name:  (projectForm.querySelector('#project-name')  || {}).value,
-        technology:    (projectForm.querySelector('#tech-type')     || {}).value,
-        volume_eur:    (projectForm.querySelector('#project-volume') || {}).value,
-        stage:         (projectForm.querySelector('#project-stage') || {}).value,
-        country:       (projectForm.querySelector('#country')       || {}).value,
-        description:   (projectForm.querySelector('#description')   || {}).value,
+        company_name:   val('#company-name'),
+        contact_name:   val('#contact-name'),
+        contact_email:  val('#contact-email'),
+        project_name:   val('#project-name'),
+        technology:     val('#tech-type'),
+        volume_eur:     val('#project-volume'),
+        target_irr:     val('#target-irr'),
+        capacity_mw:    val('#capacity-mw'),
+        duration_years: val('#duration-years'),
+        revenue_type:   val('#revenue-type'),
+        location:       val('#location'),
+        region_code:    val('#region-code'),
+        stage:          val('#project-stage'),
+        description:    val('#description'),
       };
 
       fetch('/api/submit', {

@@ -11,22 +11,25 @@ async function checkRateLimit(kv: KVNamespace | undefined, ip: string): Promise<
   return true;
 }
 
-function buildMime(from: string, to: string, subject: string, body: string): string {
-  return [
-    'MIME-Version: 1.0',
-    `Date: ${new Date().toUTCString()}`,
-    `From: ${from}`,
-    `To: ${to}`,
-    `Subject: ${subject}`,
-    'Content-Type: text/plain; charset=utf-8',
-    '',
-    body,
-  ].join('\r\n');
+async function sendResendEmail(apiKey: string, from: string, to: string, subject: string, text: string): Promise<string | null> {
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ from, to: [to], subject, text }),
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    return `Resend error ${res.status}: ${err}`;
+  }
+  return null;
 }
 
 export const POST: APIRoute = async ({ request, locals }) => {
   const env = locals.runtime.env as any;
-  const { DB, RATE_LIMIT, EMAIL } = env;
+  const { DB, RATE_LIMIT, RESEND_API_KEY } = env;
 
   let body: { email?: string; source?: string };
   try {
@@ -61,33 +64,27 @@ export const POST: APIRoute = async ({ request, locals }) => {
     throw err;
   }
 
-  // Notify admin via Email Workers (requires [[send_email]] binding in wrangler.toml)
-  if (EMAIL) {
+  // Notify admin via Resend
+  const resendKey = RESEND_API_KEY ?? (typeof process !== 'undefined' ? process.env?.RESEND_API_KEY : undefined);
+  let emailError: string | null = null;
+
+  if (resendKey) {
     try {
-      const mime = buildMime(
-        'Power Yield <noreply@power-yield.com>',
-        'hi@power-yield.com',
+      emailError = await sendResendEmail(
+        resendKey,
+        'Power Yield <kim@power-yield.com>',
+        'kim@power-yield.com',
         'New Waitlist Signup',
         `A new investor joined the waitlist.\n\nEmail:  ${email}\nSource: ${source}\nDate:   ${new Date().toISOString()}`,
       );
-      const stream = new ReadableStream({
-        start(controller) {
-          controller.enqueue(new TextEncoder().encode(mime));
-          controller.close();
-        },
-      });
-      const msg = new (globalThis as any).EmailMessage(
-        'noreply@power-yield.com',
-        'hi@power-yield.com',
-        stream,
-      );
-      await EMAIL.send(msg);
-    } catch {
-      // Email errors must not block the signup response
+    } catch (e: any) {
+      emailError = e?.message ?? 'Unknown email error';
     }
+  } else {
+    emailError = 'RESEND_API_KEY not found in environment';
   }
 
-  return json({ ok: true }, 200);
+  return json({ ok: true, email_sent: !emailError, email_error: emailError }, 200);
 };
 
 function json(data: object, status: number) {

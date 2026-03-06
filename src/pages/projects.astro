@@ -163,8 +163,11 @@ export const prerender = true;
 
           <form class="project-form" data-form="project" novalidate>
 
+            <!-- Contact Information -->
+            <p style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;font-weight:600;color:var(--mid-grey);margin-bottom:8px;grid-column:1/-1;">Contact Information</p>
+
             <div class="form-field">
-              <label for="company-name">Company Name</label>
+              <label for="company-name">Company / Developer Name</label>
               <input type="text" id="company-name" placeholder="e.g. Nordic Energy GmbH" required/>
               <span class="form-field__error">Please enter your company name.</span>
             </div>
@@ -181,6 +184,9 @@ export const prerender = true;
               <span class="form-field__error">Please enter a valid email address.</span>
             </div>
 
+            <!-- Project Details -->
+            <p style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;font-weight:600;color:var(--mid-grey);margin-bottom:8px;margin-top:16px;grid-column:1/-1;">Project Details</p>
+
             <div class="form-field">
               <label for="project-name">Project Name</label>
               <input type="text" id="project-name" placeholder="e.g. Algarve Solar II" required/>
@@ -191,19 +197,79 @@ export const prerender = true;
               <label for="tech-type">Technology Type</label>
               <select id="tech-type" required>
                 <option value="">Select technology</option>
-                <option value="solar">Solar PV</option>
-                <option value="wind-onshore">Onshore Wind</option>
-                <option value="wind-offshore">Offshore Wind</option>
-                <option value="hybrid">Hybrid</option>
-                <option value="other">Other</option>
+                <option value="solar|Solar PV">Solar PV</option>
+                <option value="wind|Wind — Onshore">Onshore Wind</option>
+                <option value="wind|Wind — Offshore">Offshore Wind</option>
+                <option value="hybrid|Hybrid">Hybrid</option>
               </select>
               <span class="form-field__error">Please select a technology type.</span>
             </div>
 
             <div class="form-field">
+              <label for="location">Location</label>
+              <input type="text" id="location" placeholder="e.g. Algarve, PT" required/>
+              <span class="form-field__error">Please enter the project location.</span>
+            </div>
+
+            <div class="form-field">
+              <label for="region-code">Country Code (ISO)</label>
+              <select id="region-code" required>
+                <option value="">Select country</option>
+                <option value="PT">Portugal</option>
+                <option value="DE">Germany</option>
+                <option value="ES">Spain</option>
+                <option value="FR">France</option>
+                <option value="IT">Italy</option>
+                <option value="DK">Denmark</option>
+                <option value="GB">United Kingdom</option>
+                <option value="NL">Netherlands</option>
+                <option value="NO">Norway</option>
+                <option value="SE">Sweden</option>
+                <option value="FI">Finland</option>
+                <option value="PL">Poland</option>
+                <option value="AT">Austria</option>
+              </select>
+              <span class="form-field__error">Please select a country.</span>
+            </div>
+
+            <!-- Financials -->
+            <p style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;font-weight:600;color:var(--mid-grey);margin-bottom:8px;margin-top:16px;grid-column:1/-1;">Financials &amp; Technical</p>
+
+            <div class="form-field">
               <label for="project-volume">Project Volume (EUR)</label>
               <input type="number" id="project-volume" placeholder="e.g. 50000000" min="0" required/>
               <span class="form-field__error">Please enter the project volume.</span>
+            </div>
+
+            <div class="form-field">
+              <label for="target-irr">Target IRR (%)</label>
+              <input type="number" id="target-irr" placeholder="e.g. 8.4" min="0" max="30" step="0.1" required/>
+              <span class="form-field__error">Please enter the target IRR.</span>
+            </div>
+
+            <div class="form-field">
+              <label for="capacity-mw">Capacity (MW)</label>
+              <input type="number" id="capacity-mw" placeholder="e.g. 42" min="0" step="0.1" required/>
+              <span class="form-field__error">Please enter the capacity.</span>
+            </div>
+
+            <div class="form-field">
+              <label for="duration-years">Duration (Years)</label>
+              <input type="number" id="duration-years" placeholder="e.g. 12" min="1" max="50" required/>
+              <span class="form-field__error">Please enter the project duration.</span>
+            </div>
+
+            <div class="form-field">
+              <label for="revenue-type">Revenue Type</label>
+              <select id="revenue-type" required>
+                <option value="">Select revenue type</option>
+                <option value="PPA">PPA</option>
+                <option value="FiT">Feed-in Tariff (FiT)</option>
+                <option value="CfD">Contract for Difference (CfD)</option>
+                <option value="PPA + FiT">PPA + FiT</option>
+                <option value="Merchant">Merchant</option>
+              </select>
+              <span class="form-field__error">Please select a revenue type.</span>
             </div>
 
             <div class="form-field">
@@ -218,12 +284,6 @@ export const prerender = true;
               <span class="form-field__error">Please select a project stage.</span>
             </div>
 
-            <div class="form-field">
-              <label for="country">Country</label>
-              <input type="text" id="country" placeholder="e.g. Germany" required/>
-              <span class="form-field__error">Please enter the project country.</span>
-            </div>
-
             <div class="form-field form-field--full">
               <label for="description">Brief Description</label>
               <textarea id="description" rows="4" placeholder="Please provide a short overview of the project — technology, location, current status, and any key highlights." required></textarea>
@@ -231,12 +291,12 @@ export const prerender = true;
             </div>
 
             <div class="form-submit-row">
-              <button type="submit" class="btn-green">Send Project Overview &rarr;</button>
+              <button type="submit" class="btn-green">Submit Project &rarr;</button>
               <p style="font-size:11px;color:var(--mid-grey);max-width:200px;line-height:1.5">We respond within 5 business days. All submissions are confidential.</p>
             </div>
 
             <div class="form-success">
-              <p>Thank you — our team will review your project and be in touch within 5 business days.</p>
+              <p>Thank you — your project has been submitted successfully. Our team will review it and be in touch within 5 business days.</p>
             </div>
 
           </form>

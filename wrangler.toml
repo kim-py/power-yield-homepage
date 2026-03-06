@@ -14,5 +14,5 @@ database_id = "d4e82b72-ecbc-4d51-ac8c-ed6833e85116"
 binding = "RATE_LIMIT"
 id = "250a0aa2cb184948bf1cb7ca3313fdce"
 
-# Email notifications via Cloudflare Email Workers are not supported on Pages.
-# Admin submissions are visible in the dashboard at /admin/submissions.
+# Email notifications via Resend (API key set as environment variable RESEND_API_KEY)
+# Sender domain (power-yield.com) must be verified in Resend dashboard.
