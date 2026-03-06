@@ -6,7 +6,7 @@ async function checkRateLimit(kv: KVNamespace | undefined, ip: string): Promise<
   if (!kv) return true; // KV not configured yet — allow
   const key = `rl:sub:${ip}`;
   const count = parseInt((await kv.get(key)) ?? '0');
-  if (count >= 2) return false;
+  if (count >= 10) return false;
   await kv.put(key, String(count + 1), { expirationTtl: 86400 });
   return true;
 }
