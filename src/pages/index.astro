@@ -130,59 +130,69 @@ export const prerender = true;
     <div class="container">
       <span class="section-label">Featured Projects</span>
 
-      <div class="cards-grid">
-        <!-- Card 1 — Light -->
-        <article class="invest-card">
-          <span class="tag tag--green-pale invest-card__tag">Solar Energy</span>
-          <h2 class="invest-card__title">Algarve Solar I · Portugal</h2>
-          <p class="invest-card__developer">Iberian Renewable Fund</p>
-          <div class="invest-card__stats">
-            <div>
-              <div class="invest-card__stat-key">Project Volume</div>
-              <div class="invest-card__stat-val">€ 48.5M</div>
-            </div>
-            <div>
-              <div class="invest-card__stat-key">Target IRR</div>
-              <div class="invest-card__stat-val">8.4%</div>
-            </div>
-            <div>
-              <div class="invest-card__stat-key">Duration</div>
-              <div class="invest-card__stat-val">12 Years</div>
-            </div>
-            <div>
-              <div class="invest-card__stat-key">Status</div>
-              <div class="invest-card__stat-val" style="color:var(--green);font-weight:500">Open</div>
-            </div>
-          </div>
-          <a href="/projects" class="invest-card__cta">View Project Details &rarr;</a>
-        </article>
-
-        <!-- Card 2 — Dark -->
-        <article class="invest-card invest-card--dark">
-          <span class="tag tag--charcoal invest-card__tag" style="background:rgba(255,255,255,0.12);color:var(--white)">Wind Energy</span>
-          <h2 class="invest-card__title">North Sea Offshore II · Germany</h2>
-          <p class="invest-card__developer" style="color:var(--mid-grey)">Northern Yield Fund</p>
-          <div class="invest-card__stats">
-            <div>
-              <div class="invest-card__stat-key">Project Volume</div>
-              <div class="invest-card__stat-val">€ 124M</div>
-            </div>
-            <div>
-              <div class="invest-card__stat-key">Target IRR</div>
-              <div class="invest-card__stat-val">9.1%</div>
-            </div>
-            <div>
-              <div class="invest-card__stat-key">Duration</div>
-              <div class="invest-card__stat-val">15 Years</div>
-            </div>
-            <div>
-              <div class="invest-card__stat-key">Status</div>
-              <div class="invest-card__stat-val" style="color:var(--gold);font-weight:500">Closing Soon</div>
-            </div>
-          </div>
-          <a href="/projects" class="invest-card__cta">View Project Details &rarr;</a>
-        </article>
+      <div class="cards-grid" id="featured-projects">
+        <!-- Loaded dynamically from DB -->
       </div>
+
+      <script>
+        (function () {
+          const grid = document.getElementById('featured-projects');
+          if (!grid) return;
+
+          const countryNames = {
+            PT: 'Portugal', DE: 'Germany', ES: 'Spain', FR: 'France',
+            IT: 'Italy', DK: 'Denmark', GB: 'United Kingdom', NL: 'Netherlands',
+            NO: 'Norway', SE: 'Sweden', FI: 'Finland', PL: 'Poland', AT: 'Austria',
+          };
+
+          function statusLabel(s) {
+            if (s === 'open') return 'Open';
+            if (s === 'closing') return 'Closing Soon';
+            return 'Coming Soon';
+          }
+
+          function statusColor(s) {
+            if (s === 'open') return 'color:var(--green);font-weight:500';
+            if (s === 'closing') return 'color:var(--gold);font-weight:500';
+            return '';
+          }
+
+          function formatVolume(v) {
+            return '€ ' + (v / 1000000).toLocaleString('en', { maximumFractionDigits: 1 }) + 'M';
+          }
+
+          function renderCard(p, isDark) {
+            const country = countryNames[p.region_code] || p.region_code;
+            const darkClass = isDark ? ' invest-card--dark' : '';
+            const tagClass = isDark
+              ? 'tag tag--charcoal invest-card__tag" style="background:rgba(255,255,255,0.12);color:var(--white)'
+              : 'tag tag--green-pale invest-card__tag';
+            const devStyle = isDark ? ' style="color:var(--mid-grey)"' : '';
+
+            return '<article class="invest-card' + darkClass + '">'
+              + '<span class="' + tagClass + '">' + p.technology_label + '</span>'
+              + '<h2 class="invest-card__title">' + p.name + ' &middot; ' + country + '</h2>'
+              + '<p class="invest-card__developer"' + devStyle + '>' + p.developer_name + '</p>'
+              + '<div class="invest-card__stats">'
+              + '<div><div class="invest-card__stat-key">Project Volume</div><div class="invest-card__stat-val">' + formatVolume(p.volume_eur) + '</div></div>'
+              + '<div><div class="invest-card__stat-key">Target IRR</div><div class="invest-card__stat-val">' + p.target_irr + '%</div></div>'
+              + '<div><div class="invest-card__stat-key">Duration</div><div class="invest-card__stat-val">' + p.duration_years + ' Years</div></div>'
+              + '<div><div class="invest-card__stat-key">Status</div><div class="invest-card__stat-val" style="' + statusColor(p.status) + '">' + statusLabel(p.status) + '</div></div>'
+              + '</div>'
+              + '<a href="/listings" class="invest-card__cta">View Project Details &rarr;</a>'
+              + '</article>';
+          }
+
+          fetch('/api/projects?featured=1')
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+              if (!data.projects || !data.projects.length) return;
+              grid.innerHTML = data.projects.map(function (p, i) {
+                return renderCard(p, i % 2 === 1);
+              }).join('');
+            });
+        })();
+      </script>
 
       <div class="cards-cta">
         <a href="/listings" class="btn-outline">Explore All Projects</a>
