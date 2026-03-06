@@ -11,8 +11,8 @@ async function checkRateLimit(kv: KVNamespace | undefined, ip: string): Promise<
   return true;
 }
 
-async function sendResendEmail(apiKey: string, from: string, to: string, subject: string, text: string) {
-  await fetch('https://api.resend.com/emails', {
+async function sendResendEmail(apiKey: string, from: string, to: string, subject: string, text: string): Promise<string | null> {
+  const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${apiKey}`,
@@ -20,6 +20,11 @@ async function sendResendEmail(apiKey: string, from: string, to: string, subject
     },
     body: JSON.stringify({ from, to: [to], subject, text }),
   });
+  if (!res.ok) {
+    const err = await res.text();
+    return `Resend error ${res.status}: ${err}`;
+  }
+  return null;
 }
 
 export const POST: APIRoute = async ({ request, locals }) => {
@@ -60,21 +65,26 @@ export const POST: APIRoute = async ({ request, locals }) => {
   }
 
   // Notify admin via Resend
-  if (RESEND_API_KEY) {
+  const resendKey = RESEND_API_KEY ?? (typeof process !== 'undefined' ? process.env?.RESEND_API_KEY : undefined);
+  let emailError: string | null = null;
+
+  if (resendKey) {
     try {
-      await sendResendEmail(
-        RESEND_API_KEY,
+      emailError = await sendResendEmail(
+        resendKey,
         'Power Yield <kim@power-yield.com>',
         'kim@power-yield.com',
         'New Waitlist Signup',
         `A new investor joined the waitlist.\n\nEmail:  ${email}\nSource: ${source}\nDate:   ${new Date().toISOString()}`,
       );
-    } catch {
-      // Email errors must not block the signup response
+    } catch (e: any) {
+      emailError = e?.message ?? 'Unknown email error';
     }
+  } else {
+    emailError = 'RESEND_API_KEY not found in environment';
   }
 
-  return json({ ok: true }, 200);
+  return json({ ok: true, email_sent: !emailError, email_error: emailError }, 200);
 };
 
 function json(data: object, status: number) {
