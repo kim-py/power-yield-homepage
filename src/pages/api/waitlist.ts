@@ -64,8 +64,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
     try {
       await sendResendEmail(
         RESEND_API_KEY,
-        'Power Yield <noreply@power-yield.com>',
-        'hi@power-yield.com',
+        'Power Yield <kim@power-yield.com>',
+        'kim@power-yield.com',
         'New Waitlist Signup',
         `A new investor joined the waitlist.\n\nEmail:  ${email}\nSource: ${source}\nDate:   ${new Date().toISOString()}`,
       );

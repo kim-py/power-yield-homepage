@@ -154,8 +154,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
       await sendResendEmail(
         RESEND_API_KEY,
-        'Power Yield <noreply@power-yield.com>',
-        'hi@power-yield.com',
+        'Power Yield <kim@power-yield.com>',
+        'kim@power-yield.com',
         `New Project Submission: ${project_name}`,
         emailBody,
       );
